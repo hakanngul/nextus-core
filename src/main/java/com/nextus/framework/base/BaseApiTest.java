@@ -26,8 +26,6 @@ public abstract class BaseApiTest {
             request.dispose();
             request = null;
         }
-
-        // Close Playwright instance for this thread
         PlaywrightManager.close();
     }
 }

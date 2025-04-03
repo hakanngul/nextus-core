@@ -38,6 +38,17 @@ public class ApiAssert {
         return hasStatus(200);
     }
 
+
+    public ApiAssert isNotSuccess() {
+        return hasStatusNot();
+    }
+
+    private ApiAssert hasStatusNot() {
+        Assertions.assertNotEquals(200, response.status(),
+            String.format("Expected status not %d but got %d", 200, response.status()));
+        return this;
+    }
+
     public ApiAssert hasStatus(int expectedStatus) {
         Assertions.assertEquals(expectedStatus, response.status(),
             String.format("Expected status %d but got %d", expectedStatus, response.status()));

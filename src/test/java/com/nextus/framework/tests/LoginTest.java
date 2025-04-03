@@ -1,29 +1,69 @@
 package com.nextus.framework.tests;
 
 import com.nextus.framework.annotations.TestTags.Smoke;
-import com.nextus.framework.annotations.TestOrder;
-import com.nextus.framework.base.BaseTest;
+import com.nextus.framework.base.BaseApiTest;
+import com.nextus.framework.data.model.UserModel;
 import com.nextus.framework.extensions.TestExecutionExtension;
+import com.microsoft.playwright.APIResponse;
+import com.microsoft.playwright.options.RequestOptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import com.nextus.framework.assertions.ApiAssert;
 
 @ExtendWith(TestExecutionExtension.class)
-@DisplayName("Login Functionality Tests")
-class LoginTest extends BaseTest {
+@DisplayName("Login API Tests")
+class LoginTest extends BaseApiTest {
+
+    private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
     @Test
     @Smoke
-    @TestOrder(1)
     @DisplayName("User can login with valid credentials")
     void validLogin() {
-        // Test implementation
+        // Arrange - Simulating login with existing user (ID: 1)
+        APIResponse response = request.get(BASE_URL + "/users/1");
+
+        // Assert
+        ApiAssert.assertThat(response)
+            .isSuccess()
+            .isJson()
+            .hasField("email", "Sincere@april.biz")
+            .hasField("username", "Bret");
     }
 
     @Test
-    @TestOrder(2)
     @DisplayName("User cannot login with invalid credentials")
     void invalidLogin() {
-        // Test implementation
+        // Arrange - Trying to get non-existent user (ID: 999)
+        APIResponse response = request.get(BASE_URL + "/users/999");
+
+        // Assert
+        ApiAssert.assertThat(response)
+            .hasStatus(404)
+            .hasEmptyBody();
+    }
+
+    @Test
+    @DisplayName("User can login with new registration")
+    void loginWithNewRegistration() {
+        // Arrange
+        UserModel newUser = UserModel.builder()
+            .username("testuser")
+            .email("test@example.com")
+            .name("Test User")
+            .build();
+
+        // Act - Simulate registration by creating new user
+        APIResponse response = request.post(BASE_URL + "/users",
+            RequestOptions.create()
+                .setHeader("Content-Type", "application/json")
+                .setData(newUser));
+
+        // Assert
+        ApiAssert.assertThat(response)
+            .isCreated()
+            .isJson()
+            .bodyEquals(newUser);
     }
 }

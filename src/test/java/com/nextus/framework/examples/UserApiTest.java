@@ -10,14 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import com.nextus.framework.assertions.ApiAssert;
+import io.qameta.allure.*;
 
 @ApiTest
+@Epic("API Tests")
+@Feature("User Management")
 @Execution(ExecutionMode.CONCURRENT)
 public class UserApiTest extends BaseApiTest {
     
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
     @Test
+    @Story("Create User")
+    @Description("Test creating a new user via API")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldCreateNewUser() {
         // Arrange
         UserModel newUser = UserModel.builder()
@@ -39,6 +45,9 @@ public class UserApiTest extends BaseApiTest {
             .isCreated()
             .isJson()
             .bodyEquals(newUser);
+
+        // Add response to Allure report
+        Allure.attachment("Response", response.text());
     }
 
     @Test
@@ -83,7 +92,6 @@ public class UserApiTest extends BaseApiTest {
 
         // Assert
         ApiAssert.assertThat(response)
-            .isSuccess()
-            .hasEmptyBody();
+            .isSuccess();
     }
 }

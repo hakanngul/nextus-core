@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import com.nextus.framework.constants.FrameworkConstants;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Manages test reporting functionality with Allure integration.
