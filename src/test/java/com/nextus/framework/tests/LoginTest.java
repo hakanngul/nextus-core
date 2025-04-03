@@ -1,6 +1,7 @@
 package com.nextus.framework.tests;
 
-import com.nextus.framework.annotations.TestTags.Smoke;
+import com.nextus.framework.annotations.TestTags;
+import com.nextus.framework.annotations.TestTags.*;
 import com.nextus.framework.base.BaseApiTest;
 import com.nextus.framework.data.model.UserModel;
 import com.nextus.framework.extensions.TestExecutionExtension;
@@ -10,14 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import com.nextus.framework.assertions.ApiAssert;
-
+import io.qameta.allure.Feature;
 @ExtendWith(TestExecutionExtension.class)
-@DisplayName("Login API Tests")
+@Feature("Login")
 class LoginTest extends BaseApiTest {
 
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
-    @Test
     @Smoke
     @DisplayName("User can login with valid credentials")
     void validLogin() {
@@ -32,7 +32,7 @@ class LoginTest extends BaseApiTest {
             .hasField("username", "Bret");
     }
 
-    @Test
+    @Regression
     @DisplayName("User cannot login with invalid credentials")
     void invalidLogin() {
         // Arrange - Trying to get non-existent user (ID: 999)
@@ -44,7 +44,7 @@ class LoginTest extends BaseApiTest {
             .hasEmptyBody();
     }
 
-    @Test
+    @API
     @DisplayName("User can login with new registration")
     void loginWithNewRegistration() {
         // Arrange

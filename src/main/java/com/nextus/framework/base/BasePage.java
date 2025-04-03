@@ -7,6 +7,8 @@ import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.MouseButton;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import com.microsoft.playwright.options.AriaRole;
+import com.nextus.framework.network.NetworkInterceptor;
+import lombok.Getter;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -20,9 +22,11 @@ import java.util.regex.Pattern;
 public abstract class BasePage {
     protected final Page page;
     protected static final int DEFAULT_TIMEOUT = 30000;
-
+    @Getter
+    protected final NetworkInterceptor networkInterceptor;
     public BasePage(Page page) {
         this.page = page;
+        this.networkInterceptor = new NetworkInterceptor(page);
     }
 
     // Navigation Methods
