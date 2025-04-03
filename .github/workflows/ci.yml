@@ -19,6 +19,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+
+    - name: Setup Jenkins
+      uses: snow-actions/setup-jenkins@v1.1.0
         
     - name: Install Playwright Dependencies
       run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
@@ -29,6 +32,12 @@ jobs:
     - name: Run Tests
       run: mvn test
       
+    - name: Generate Allure Results
+      run: mvn allure:report
+      
+    - name: Allure report
+      uses: afiore/action-allure-report@v0.1.0
+      
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v4
@@ -38,4 +47,5 @@ jobs:
           target/surefire-reports/
           target/videos/
           target/screenshots/
+          target/allure-report/
         retention-days: 30
